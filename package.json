@@ -1,0 +1,20 @@
+{
+  "name": "npat-game",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "firebase": "^10.14.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.3.5"
+  }
+}

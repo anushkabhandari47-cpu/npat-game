@@ -1,0 +1,658 @@
+/* =====================================================
+   NPAT Game — Responsive Styles
+   ===================================================== */
+
+:root {
+  --wood-bg: #8c6239;
+  --paper-bg: #fdfbf7;
+  --paper-line: #93c5fd;
+  --paper-margin: #f87171;
+  --text-pencil: #334155;
+  --text-pen: #dc2626;
+  --font-hand: 'Caveat', cursive;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-hand);
+  background-color: var(--wood-bg);
+  background-image:
+    url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23n)" opacity="0.15"/></svg>'),
+    linear-gradient(to right, #6d4c2b, #8c6239, #6d4c2b);
+  color: var(--text-pencil);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem 0;
+  overflow-x: hidden;
+}
+
+/* ===================== LAYOUT ===================== */
+.app-container {
+  width: 95%;
+  max-width: 1000px;
+  padding: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===================== SCREENS ===================== */
+.screen {
+  display: none;
+  width: 100%;
+}
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.4s ease forwards;
+}
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================== BLACKBOARD ===================== */
+.blackboard-container {
+  background-color: #2F4F4F;
+  border: 12px solid #5c4033;
+  border-radius: 8px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 5px 5px 15px rgba(0,0,0,0.5);
+  margin: 0 auto 2rem auto;
+  width: 100%;
+  max-width: 800px;
+  padding: 1rem 2rem;
+  color: #fdfbf7;
+  position: relative;
+}
+.blackboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.bb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.875rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+.bb-center { justify-content: center; }
+.bb-bottom {
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #ffb6b9;
+}
+.bb-letter {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #fdfbf7;
+  animation: fadeIn 0.3s;
+}
+.timer-col span {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #98fb98;
+}
+.timer-col.red    span { color: #ff6b6b; }
+.timer-col.yellow span { color: #feca57; }
+.timer-col.green  span { color: #98fb98; }
+
+/* ===================== NOTEBOOK PAPER ===================== */
+.clipboard-container {
+  position: relative;
+  width: 100%;
+  padding-top: 20px;
+}
+.clipboard-clip {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 40px;
+  background: linear-gradient(to bottom, #d1d5db, #9ca3af, #4b5563);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.8);
+  z-index: 10;
+}
+.notebook-paper {
+  background: var(--paper-bg);
+  border-radius: 2px 8px 8px 2px;
+  padding: 2rem 2rem 2rem 4rem;
+  position: relative;
+  box-shadow:
+    inset 5px 0 15px rgba(0,0,0,0.05),
+    5px 5px 15px rgba(0,0,0,0.5),
+    2px 2px 0 rgba(253,251,247,0.8),
+    4px 4px 0 rgba(253,251,247,0.6);
+  background-image:
+    repeating-linear-gradient(transparent, transparent 39px, var(--paper-line) 39px, var(--paper-line) 40px);
+  background-attachment: local;
+  color: var(--text-pencil);
+  min-height: 500px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden; /* notebook-scroll-wrapper handles overflow */
+}
+.notebook-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3rem;
+  width: 2px;
+  background: var(--paper-margin);
+  z-index: 1;
+}
+.auth-box { min-height: auto; padding-top: 3rem; }
+
+/* ===================== NOTEBOOK TABLE — RESPONSIVE ===================== */
+
+/*
+ * .notebook-scroll-wrapper is the horizontal-scroll container.
+ * It sits inside .notebook-paper; the table inside can be wider than
+ * the viewport on small screens, but the wrapper clips it.
+ * The sticky .row-letter column stays visible while the user scrolls right.
+ */
+.notebook-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  /* Small visual feedback so users know they can scroll */
+  scrollbar-width: thin;
+  scrollbar-color: var(--paper-line) transparent;
+}
+.notebook-scroll-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+.notebook-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notebook-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--paper-line);
+  border-radius: 4px;
+}
+
+/* Header + player rows share the same grid */
+.notebook-header,
+.game-row {
+  display: grid;
+  /* [avatar | name | place | animal | thing | pts] */
+  grid-template-columns: 60px 1fr 1fr 1fr 1fr 70px;
+  gap: 0.5rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Minimum width prevents the columns from crushing into unreadable widths.
+   Below this the wrapper scrolls instead of squishing. */
+.notebook-header { min-width: 480px; }
+.game-row        { min-width: 480px; }
+
+.notebook-header {
+  font-weight: 800;
+  color: var(--text-pen);
+  font-size: 1.8rem;
+  border-bottom: 2px solid var(--text-pen);
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+}
+
+.game-row {
+  height: 44px;
+  border-bottom: 1px dashed #60a5fa;
+}
+
+/* ---- Sticky avatar / player-name column ---- */
+.row-letter,
+.notebook-header > :first-child {
+  position: sticky;
+  left: 0;
+  /* Match paper bg so content behind doesn't bleed through */
+  background: var(--paper-bg);
+  z-index: 3;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  text-align: center;
+  /* Thin right shadow to visually separate sticky column from scrolling content */
+  box-shadow: 2px 0 4px -2px rgba(0,0,0,0.12);
+}
+.notebook-header > :first-child {
+  z-index: 4; /* above game-row sticky cells */
+  color: var(--text-pen);
+  font-size: 1.8rem;
+}
+
+/* ===================== INPUTS INSIDE ROWS ===================== */
+.input-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.input-wrapper input {
+  width: 100%;
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: var(--font-hand);
+  font-size: 1.8rem;
+  color: var(--text-pencil);
+  outline: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+.input-wrapper:focus-within::before {
+  content: '✏️';
+  position: absolute;
+  left: -20px;
+  font-size: 1.2rem;
+  animation: writing 0.5s infinite alternate;
+}
+@keyframes writing {
+  0%   { transform: translateY(0) rotate(0); }
+  100% { transform: translateY(-2px) rotate(-10deg); }
+}
+
+/* Validation colours */
+input.valid   { border-bottom: 2px solid #166534 !important; color: #166534; }
+input.invalid { border-bottom: 2px solid var(--text-pen) !important; color: var(--text-pencil); text-decoration: underline wavy var(--text-pen); }
+input.warning { border-bottom: 2px solid #b45309 !important; color: var(--text-pencil); text-decoration: underline wavy #b45309; }
+
+.input-wrapper:has(input.valid)::after {
+  content: '✓';
+  position: absolute;
+  right: -15px;
+  color: #166534;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Score badge that animates in over an input cell */
+.answer-score-badge {
+  position: absolute;
+  top: -10px;
+  right: 8px;
+  color: var(--text-pen);
+  font-size: 1.8rem;
+  font-weight: bold;
+  animation: popIn 0.3s ease;
+  pointer-events: none;
+}
+@keyframes popIn {
+  0%   { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.row-score {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-pen);
+}
+
+/* ===================== TYPOGRAPHY ===================== */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--text-pencil);
+}
+h1 span { color: var(--text-pen); }
+h2, h3 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--text-pencil);
+}
+.subtitle {
+  text-align: center;
+  color: #555;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+.highlight-red { color: var(--text-pen); }
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  padding: 0.6rem 1.8rem;
+  border-radius: 8px;
+  border: 2px solid var(--text-pencil);
+  background: rgba(253,251,247,0.9);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-pencil);
+  text-align: center;
+  margin: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+}
+.btn:hover   { transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.1); }
+.btn:active  { transform: translateY(1px); box-shadow: 0 2px 3px rgba(0,0,0,0.1); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.primary-btn   { border-color: #166534; color: #166534; }
+.secondary-btn { border-color: #1e3a8a; color: #1e3a8a; }
+.danger-btn    { border-color: var(--text-pen); color: var(--text-pen); }
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  box-shadow: none;
+}
+.icon-btn:hover { transform: scale(1.1); }
+
+/* ===================== FORM INPUTS ===================== */
+input[type="text"] {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px dashed transparent;
+  color: var(--text-pencil);
+  font-size: 1.375rem;
+  font-family: inherit;
+  outline: none;
+  padding: 0.2rem;
+  transition: all 0.3s ease;
+}
+input[type="text"]:focus {
+  border-bottom: 2px solid var(--text-pencil);
+}
+
+/* ===================== HOME / LOBBY ===================== */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.join-box {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+.player-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+.player-item .avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--text-pencil);
+  color: var(--paper-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.player-item .status {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #555;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.player-item .status.ready  { background: #166534; border-color: #166534; }
+.player-item.host .name     { color: var(--text-pen); font-weight: bold; }
+
+/* ===================== ALPHABET SPINNER ===================== */
+.alphabet-selection-area {
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0;
+}
+.alphabet-display {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+.alphabet-display span {
+  padding: 0 5px;
+  color: #94a3b8;
+  transition: all 0.1s;
+}
+.alphabet-display span.highlight {
+  color: var(--text-pen);
+  transform: scale(1.3);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+.alphabet-display span.selected {
+  color: #166534;
+  font-size: 4.5rem;
+  text-decoration: underline;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ===================== CURRENT LETTER ===================== */
+.current-letter-display {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.letter-label { font-size: 2.5rem; color: var(--text-pencil); }
+.big-letter {
+  font-size: 5rem;
+  font-weight: bold;
+  color: var(--text-pen);
+  margin-left: 1rem;
+}
+
+/* ===================== MARKS / LEADERBOARD ===================== */
+.marks-sheet { display: flex; flex-direction: column; align-items: center; }
+.marks-table { width: 100%; margin-top: 1rem; font-size: 1.8rem; }
+.marks-header,
+.marks-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 2px dashed #93c5fd;
+}
+.marks-header { font-weight: bold; color: var(--text-pen); }
+
+/* ===================== OVERLAYS ===================== */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.overlay-inner {
+  max-width: 700px;
+  width: 90%;
+}
+
+/* ===================== TURN POPUP ===================== */
+.turn-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.turn-popup-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  max-width: 90vw;
+}
+.turn-popup-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #ef4444;
+}
+.turn-popup-content p { font-size: 1.5rem; }
+
+/* ===================== TOAST ===================== */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--paper-bg);
+  border: 2px solid var(--text-pencil);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  z-index: 3000;
+  transform: translateX(150%);
+  transition: transform 0.3s;
+  font-size: 1.5rem;
+  box-shadow: 4px 4px 0 var(--text-pencil);
+  max-width: calc(100vw - 40px);
+}
+.toast.show { transform: translateX(0); }
+
+/* ===================== GAME FOOTER ===================== */
+.game-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+/* ===================== RESPONSIVE BREAKPOINTS ===================== */
+
+/* --- 1024px tablet landscape --- */
+@media (max-width: 1024px) {
+  .app-container { width: 98%; padding: 0.5rem; }
+  .notebook-paper { padding: 2rem 1.5rem 2rem 3.5rem; }
+  .notebook-margin { left: 2.5rem; }
+  .notebook-header, .game-row {
+    grid-template-columns: 55px 1fr 1fr 1fr 1fr 65px;
+    font-size: 1.6rem;
+  }
+  .input-wrapper input { font-size: 1.6rem; }
+  .bb-row { font-size: 1.5rem; }
+  .bb-letter { font-size: 3rem; }
+  .timer-col span { font-size: 2rem; }
+}
+
+/* --- 768px tablet portrait --- */
+@media (max-width: 768px) {
+  body { padding: 0.5rem 0; }
+  .app-container { width: 100%; padding: 0.25rem; }
+  .notebook-paper {
+    padding: 1.5rem 1rem 1.5rem 2.5rem;
+    min-height: auto;
+  }
+  .notebook-margin { left: 1.5rem; }
+
+  /* On mobile the table scrolls inside the wrapper.
+     We enforce a min-width so the columns don't collapse. */
+  .notebook-header,
+  .game-row {
+    min-width: 440px;
+    grid-template-columns: 48px 1fr 1fr 1fr 1fr 58px;
+    gap: 0.3rem;
+    font-size: 1.4rem;
+  }
+  .input-wrapper input { font-size: 1.4rem; }
+
+  h1 { font-size: 2rem; }
+  h2, h3 { font-size: 1.5rem; }
+  .subtitle { font-size: 1.25rem; }
+  .bb-row { font-size: 1.3rem; }
+  .bb-letter { font-size: 2.5rem; }
+  .timer-col span { font-size: 1.75rem; }
+  .alphabet-display { font-size: 2rem; }
+  .btn { font-size: 1.1rem; padding: 0.5rem 1.2rem; }
+  .marks-table { font-size: 1.4rem; }
+}
+
+/* --- 480px large phones --- */
+@media (max-width: 480px) {
+  .notebook-paper {
+    padding: 1.25rem 0.75rem 1.25rem 2rem;
+  }
+  .notebook-margin { left: 1rem; }
+  .notebook-header,
+  .game-row {
+    min-width: 400px;
+    grid-template-columns: 42px 1fr 1fr 1fr 1fr 50px;
+    gap: 0.2rem;
+    font-size: 1.25rem;
+  }
+  .input-wrapper input { font-size: 1.25rem; }
+  .row-letter, .notebook-header > :first-child { font-size: 1.5rem; }
+  .row-score { font-size: 1.5rem; }
+  .clipboard-clip { width: 120px; }
+  .bb-row { font-size: 1.1rem; }
+  .bb-letter { font-size: 2rem; }
+  .timer-col span { font-size: 1.5rem; }
+  .alphabet-display { font-size: 1.6rem; }
+  .btn { font-size: 1rem; padding: 0.4rem 1rem; margin: 0.25rem; }
+  .marks-table { font-size: 1.25rem; }
+}
+
+/* --- 390px / small phones --- */
+@media (max-width: 390px) {
+  .notebook-paper { padding: 1rem 0.5rem 1rem 1.75rem; }
+  .notebook-margin { left: 0.8rem; }
+  .notebook-header,
+  .game-row {
+    min-width: 360px;
+    grid-template-columns: 38px 1fr 1fr 1fr 1fr 46px;
+    font-size: 1.1rem;
+  }
+  .input-wrapper input { font-size: 1.1rem; }
+}
+
+/* --- 360px and below --- */
+@media (max-width: 360px) {
+  .notebook-header,
+  .game-row {
+    min-width: 340px;
+    grid-template-columns: 34px 1fr 1fr 1fr 1fr 42px;
+    font-size: 1rem;
+  }
+  .input-wrapper input { font-size: 1rem; }
+}

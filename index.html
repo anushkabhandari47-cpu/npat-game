@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Name Place Animal Thing</title>
+    <meta name="description" content="The classic Name Place Animal Thing game, now multiplayer!" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="app-container">
+
+      <!-- ===================== HOME SCREEN ===================== -->
+      <div id="home-screen" class="screen active">
+        <div class="clipboard-container">
+          <div class="clipboard-clip"></div>
+          <div class="notebook-paper auth-box">
+            <div class="notebook-margin"></div>
+            <h1>Name <span>Place</span><br>Animal Thing</h1>
+            <p class="subtitle">The classic game, now multiplayer!</p>
+            <div class="action-buttons">
+              <input type="text" id="player-name-input" placeholder="Your Name" maxlength="20" autocomplete="off" />
+              <button class="btn primary-btn" id="btn-create-room">🏠 Create Room</button>
+              <div class="join-box">
+                <input type="text" id="room-code-input" placeholder="Room Code" maxlength="6" style="text-transform:uppercase" autocomplete="off" />
+                <button class="btn secondary-btn" id="btn-join-room">Join</button>
+              </div>
+              <button class="btn" id="btn-solo">🤖 Solo vs AI</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== LOBBY SCREEN ===================== -->
+      <div id="lobby-screen" class="screen hidden">
+        <div class="clipboard-container">
+          <div class="clipboard-clip"></div>
+          <div class="notebook-paper">
+            <div class="notebook-margin"></div>
+            <h2>Game Lobby</h2>
+            <p class="subtitle">
+              Room Code: <strong id="display-room-code"></strong>
+              <button class="icon-btn" id="btn-copy-code">📋</button>
+            </p>
+            <div class="players-container">
+              <h3>Players (<span id="player-count">0</span>)</h3>
+              <ul class="player-list" id="lobby-player-list"></ul>
+            </div>
+            <div class="action-buttons" style="margin-top:2rem">
+              <button class="btn secondary-btn hidden" id="btn-ready">I'm Ready</button>
+              <button class="btn primary-btn hidden" id="btn-start-game">Start Game ▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== GAME SCREEN ===================== -->
+      <div id="game-screen" class="screen hidden">
+
+        <!-- Blackboard info bar -->
+        <div id="blackboard-container" class="blackboard-container hidden">
+          <div class="blackboard-content">
+            <div class="bb-row">
+              <div>Round <span id="current-round-number">1</span></div>
+              <div id="timer-container" class="timer-col green">
+                <span id="timer-display">90</span>s
+              </div>
+            </div>
+            <div class="bb-row bb-center hidden" id="current-letter-display">
+              <span class="bb-letter" id="display-letter"></span>
+            </div>
+            <div class="bb-row bb-bottom">
+              <span id="turn-announcement"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spinner overlay -->
+        <div id="spinner-overlay" class="overlay hidden">
+          <div class="clipboard-container overlay-inner">
+            <div class="clipboard-clip"></div>
+            <div class="notebook-paper" style="min-height:auto;text-align:center;padding:2rem">
+              <div class="notebook-margin"></div>
+              <h2 id="spinner-title">Choose the letter!</h2>
+              <div class="alphabet-selection-area">
+                <div class="alphabet-display" id="alphabet-display"></div>
+              </div>
+              <div style="margin-top:1rem">
+                <button class="btn primary-btn" id="btn-start-spinner">▶ Start</button>
+                <button class="btn danger-btn hidden" id="btn-stop-spinner">⏹ Stop!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Challenge overlay -->
+        <div id="challenge-overlay" class="overlay hidden">
+          <div class="clipboard-container overlay-inner">
+            <div class="clipboard-clip"></div>
+            <div class="notebook-paper" style="min-height:auto;padding:2rem">
+              <div class="notebook-margin"></div>
+              <h2>⚠️ Challenge Phase</h2>
+              <p style="margin-bottom:1rem;font-size:1.3rem">Click any word you want to challenge:</p>
+              <div id="challenge-list"></div>
+              <p style="margin-top:1rem;font-size:1.5rem">
+                Time left: <strong id="challenge-timer">15</strong>s
+              </p>
+              <div style="margin-top:1rem">
+                <button class="btn primary-btn hidden" id="btn-skip-challenge">Skip Challenge</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voting overlay -->
+        <div id="voting-overlay" class="overlay hidden">
+          <div class="clipboard-container overlay-inner">
+            <div class="clipboard-clip"></div>
+            <div class="notebook-paper" style="min-height:auto;padding:2rem;text-align:center">
+              <div class="notebook-margin"></div>
+              <h2>🗳️ Vote!</h2>
+              <p class="subtitle" id="vote-question"></p>
+              <div style="margin-top:1rem">
+                <button class="btn primary-btn" id="btn-vote-yes">👍 Yes, Valid!</button>
+                <button class="btn danger-btn" id="btn-vote-no">👎 No, Invalid!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notebook paper with scroll wrapper -->
+        <div class="clipboard-container">
+          <div class="clipboard-clip"></div>
+          <div class="notebook-paper">
+            <div class="notebook-margin"></div>
+            <div class="notebook-scroll-wrapper">
+              <div class="notebook-header">
+                <div class="row-letter">👤</div>
+                <div>Name</div>
+                <div>Place</div>
+                <div>Animal</div>
+                <div>Thing</div>
+                <div>Pts</div>
+              </div>
+              <div id="notebook-rows-container"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game footer buttons -->
+        <div class="game-footer">
+          <button class="btn primary-btn hidden" id="btn-submit-round">Submit Answers</button>
+          <button class="btn secondary-btn hidden" id="btn-next-round">Next Round ▶</button>
+          <button class="btn danger-btn hidden" id="btn-end-game">End Game 🏆</button>
+        </div>
+      </div>
+
+      <!-- ===================== LEADERBOARD SCREEN ===================== -->
+      <div id="leaderboard-screen" class="screen hidden">
+        <div class="clipboard-container">
+          <div class="clipboard-clip"></div>
+          <div class="notebook-paper marks-sheet">
+            <div class="notebook-margin"></div>
+            <h2>🏆 Game Over!</h2>
+            <p class="subtitle">Winner: <strong id="champion-name"></strong></p>
+            <div class="marks-table">
+              <div class="marks-header">
+                <div>Player</div>
+                <div>Score</div>
+                <div>Rounds Won</div>
+                <div>Unique</div>
+              </div>
+              <div id="marks-rows"></div>
+            </div>
+            <div style="margin-top:2rem;text-align:center">
+              <button class="btn primary-btn" id="btn-play-again">Play Again 🔄</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.app-container -->
+
+    <!-- Turn popup -->
+    <div id="turn-popup" class="turn-popup hidden">
+      <div class="turn-popup-content">
+        <h2>🎯 Your Turn!</h2>
+        <p>Stop the alphabet to choose a letter.</p>
+      </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Audio (silent fallback) -->
+    <audio id="sfx-pencil" preload="none"></audio>
+    <audio id="sfx-pageturn" preload="none"></audio>
+    <audio id="sfx-bell" preload="none"></audio>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
