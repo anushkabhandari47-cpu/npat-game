@@ -25,6 +25,26 @@ A real-time multiplayer Name, Place, Animal, Thing (NPAT) game built using:
 - Cloud Firestore
 - CSS
 
+## Screenshots
+
+### Home
+![Home](screenshots/home.png)
+
+### Lobby
+![Lobby](screenshots/lobby.png)
+
+### Gameplay
+![Gameplay](screenshots/gameplay.png)
+
+### Letter Selection
+![Letter Selection](screenshots/letter_selection.png)
+
+### Evaluation
+![Evaluation](screenshots/evaluation.png)
+
+### Leaderboard
+![Leaderboard](screenshots/leaderboard.png)
+
 ## Run locally
 
 ```bash
