@@ -17,6 +17,14 @@ A real-time multiplayer Name, Place, Animal, Thing (NPAT) game built using:
 - Mobile responsive design
 - Firebase Hosting / Vercel Deployment
 
+## Tech Stack
+- React
+- TypeScript
+- Vite
+- Firebase Authentication
+- Cloud Firestore
+- CSS
+
 ## Run locally
 
 ```bash
@@ -31,5 +39,7 @@ npm run build
 ```
 
 ## Live Demo
+🔗 https://npat-game-fawn.vercel.app
 
-https://your-vercel-url.vercel.app
+## Source Code
+🔗 https://github.com/anushkabhandari47-cpu/npat-game
