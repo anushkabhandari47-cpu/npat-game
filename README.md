@@ -25,24 +25,52 @@ A real-time multiplayer Name, Place, Animal, Thing (NPAT) game built using:
 - Cloud Firestore
 - CSS
 
-## Screenshots
+# Screenshots
 
-### Home
+## 🏠 Home Screen
+
+Players can play solo against AI or create and join multiplayer rooms.
+
 ![Home](screenshots/home.png)
 
-### Lobby
+---
+
+## 👥 Multiplayer Lobby
+
+Players join using a room code and wait until everyone is ready.
+
 ![Lobby](screenshots/lobby.png)
 
-### Gameplay
-![Gameplay](screenshots/gameplay.png)
+---
 
-### Letter Selection
+## 🔤 Letter Selection
+
+The host selects a letter to begin the round.
+
 ![Letter Selection](screenshots/letter_selection.png)
 
-### Evaluation
+---
+
+## 🎮 Gameplay
+
+Players race against the timer while the AI generates its own answers simultaneously.
+
+![Gameplay](screenshots/gameplay.png)
+
+---
+
+## ✅ Automatic Evaluation
+
+Submitted answers are validated automatically and scored in real time.
+
 ![Evaluation](screenshots/evaluation.png)
 
-### Leaderboard
+---
+
+## 🏆 Leaderboard
+
+Final scores are calculated automatically and the winner is announced.
+
 ![Leaderboard](screenshots/leaderboard.png)
 
 ## Run locally
